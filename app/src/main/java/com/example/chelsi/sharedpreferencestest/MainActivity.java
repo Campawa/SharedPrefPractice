@@ -1,5 +1,6 @@
 package com.example.chelsi.sharedpreferencestest;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -37,14 +38,35 @@ public class MainActivity extends AppCompatActivity {
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                SharedPreferences.Editor editor = login.edit();
+                if (checkBox.isChecked()) {
+                    editor.putString("username", username.getText().toString());
+                    editor.putString("password", password.getText().toString());
+                    editor.putBoolean("isChecked", checkBox.isChecked());
+                    editor.commit();
+                } else {
+                    editor.putBoolean("isChecked", checkBox.isChecked());
+                    editor.commit();
+                }
 
+                String checkUser = "user" + username.getText().toString();
+                String checkPassword = "password" + username.getText().toString();
+
+                if (username.getText().toString().equalsIgnoreCase(login.getString(checkUser, null))
+                        && password.getText().toString().equals(login.getString(checkPassword, null))) {
+                    Intent intent = new Intent(MainActivity.this, SecondActivity.class);
+                    intent.putExtra("currentUser", username.getText().toString());
+                    startActivity(intent);
+                }
             }
         });
 
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent(MainActivity.this, RegisterActivity.class);
+                intent.putExtra("testKey", SHARED_PREFS_KEY);
+                startActivity(intent);
             }
         });
 
